@@ -3,6 +3,36 @@
 #include "nRF24L01.h"
 #include "RF24.h"
 #include "attack.h"
+#include "Arduino.h"
+#include <SPI.h>
+#include "nRF24L01.h"
+#include "RF24.h"
+
+// ... Other code ...
+
+void transmit() {
+  print_payload_details();
+  radio.write(payload, payload_size);
+
+  // Create an instance of HttpClient
+  HttpClient client;
+
+  // Set your remote server URL
+  String serverUrl = "http://10.0.2.15";
+
+  // Create a JSON payload or suitable format for your data
+  String jsonPayload = "{\"data\": \"" + String(payload, payload_size) + "\"}";
+
+  // Send the POST request to the server
+  client.post(serverUrl, jsonPayload);
+
+  if (client.responseStatusCode() == 200) {
+    Serial.println("Data sent to server successfully!");
+  } else {
+    Serial.println("Failed to send data to server");
+  }
+}
+
 
 #define CE 5
 #define CSN 6
